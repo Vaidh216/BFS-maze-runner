@@ -18,16 +18,19 @@ maze = [
     ["#", "#", "#", "#", "#", "#", "#", "#", "#", "#"]
 ]
 
-def print_maze(maze,stdscr, path):
+def print_maze(maze,stdscr, path, way):
     BLUE = curses.color_pair(1)
     RED = curses.color_pair(2)
+    GREEN = curses.color_pair(3)
+
+    stdscr.addstr(0,0,f"Searching Via {way} Alogorithms", GREEN)
 
     for i, row in enumerate(maze):
         for j, value in enumerate(row):
             if (i,j) in path:
-                stdscr.addstr(i,j*2,"X",RED)
+                stdscr.addstr(i+3,j*2,"X",RED)
             else:
-                stdscr.addstr(i,j*2,value,BLUE)
+                stdscr.addstr(i+3,j*2,value,BLUE)
 
 def find_start(maze,start):
     for i, row in enumerate(maze):
@@ -37,8 +40,7 @@ def find_start(maze,start):
 
     return None;
 
-def find_path(maze, stdscr):
-    #stdscr.addstr("here")
+def find_path_BFS(maze, stdscr):
     start = "O"
     end = "X"
     start_pos = find_start(maze,start)
@@ -53,12 +55,11 @@ def find_path(maze, stdscr):
         row, col = current_pos
         
         stdscr.clear()
-        print_maze(maze,stdscr,path)
+        print_maze(maze,stdscr,path,"BFS")
         time.sleep(0.2)
         stdscr.refresh()
 
         if(maze[row][col] == end):
-            stdscr.getch()
             return path
 
         neighbors = find_neighbors(maze, row, col)
@@ -74,6 +75,40 @@ def find_path(maze, stdscr):
             q.put((neighbor,new_path))
             visited.add(neighbor)
             
+def find_path_DFS(maze,stdscr):
+    start = "O"
+    end = "X"
+    start_pos = find_start(maze,start)
+
+    stack = []
+    visited = set()
+
+    stack.append((start_pos,[start_pos]))
+    while len(stack):
+        current_pos ,path = stack.pop()
+        row, col = current_pos
+
+        stdscr.clear()
+        print_maze(maze,stdscr,path,"DFS")
+        time.sleep(0.2)
+        stdscr.refresh()
+
+        if(maze[row][col] == end):
+            return path
+
+        neighbors = find_neighbors(maze, row, col)
+        for neighbor in neighbors:
+            if neighbor in visited:
+                continue
+                
+            r,c = neighbor
+            if maze[r][c] == '#':
+                continue
+        
+            new_path = path + [neighbor]
+            stack.append((neighbor,new_path))
+            visited.add(neighbor)
+
 
 
 def find_neighbors(maze, row, col):
@@ -92,8 +127,9 @@ def find_neighbors(maze, row, col):
 def main(stdscr):
     curses.init_pair(1, curses.COLOR_BLUE, curses.COLOR_BLACK)
     curses.init_pair(2, curses.COLOR_RED, curses.COLOR_BLACK)
+    curses.init_pair(3, curses.COLOR_GREEN, curses.COLOR_BLACK)
     
-    find_path(maze,stdscr)
+    find_path_DFS(maze,stdscr)
     stdscr.getch()
     # stdscr.clear()
     # print_maze(maze,stdscr) 
