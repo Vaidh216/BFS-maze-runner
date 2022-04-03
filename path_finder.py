@@ -2,7 +2,7 @@ import curses
 from curses import wrapper
 import queue
 import time
-from sklearn import neighbors
+
 maze = [
     [" ", " ", " ", "#", "#", "O", "#", "#", "#", "#"],
     [" ", "#", " ", " ", " ", " ", " ", " ", " ", "#"],

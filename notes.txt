@@ -1,5 +1,0 @@
-This is a BFS (Breadh Search search) alogritms visualizer in which the BFS is implemented to find the sortest path between 2 point on a grid
-
-Why use BFS not DFS ?
-    Here we use BFS not DFS because BFS will go a sigle move in the same time in the every possible directions whereas the DFS will First search the whole path is it feasible or not;
-    both will search find the asnwer that is it possible or no but BFS will find the shortest path also where as DFS with the first path that will reach the end point
